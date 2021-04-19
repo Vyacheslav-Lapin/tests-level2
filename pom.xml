@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="
-          http://maven.apache.org/POM/4.0.0
-          http://maven.apache.org/xsd/maven-4.0.0.xsd">
+           http://maven.apache.org/POM/4.0.0
+           http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,39 +16,32 @@
     <!--region General-->
     <java.version>16</java.version>
     <revision>1.0-SNAPSHOT</revision>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <!--endregion-->
 
     <!--region libs-->
     <lombok.version>1.18.20</lombok.version>
     <logback-classic.version>1.3.0-alpha5</logback-classic.version>
+    <vavr.version>1.0.0-alpha-3</vavr.version>
+    <!--endregion-->
+
+    <!--region test libs-->
+    <junit-jupiter.version>5.7.0</junit-jupiter.version>
+    <assertj.version>3.18.1</assertj.version>
+    <mockito.version>3.7.0</mockito.version>
     <!--endregion-->
 
     <!--region plugins-->
     <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     <maven.compiler.release>${java.version}</maven.compiler.release>
-    <!--<maven.compiler.source>1.8</maven.compiler.source>-->
-    <!--<maven.compiler.target>1.8</maven.compiler.target>-->
-    <maven.compiler.parameters>true</maven.compiler.parameters>
-    <maven.compiler.forceJavacCompilerUse>true</maven.compiler.forceJavacCompilerUse>
-    <maven.compiler.showWarnings>true</maven.compiler.showWarnings>
-    <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
-    <maven.compiler.fork>true</maven.compiler.fork>
-    <maven.compiler.executable>true</maven.compiler.executable>
-
+    <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
     <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
-    <lombok.verbose>true</lombok.verbose>
-    <lombok.addOutputDirectory>false</lombok.addOutputDirectory>
-    <lombok.sourceDirectory>${project.basedir}/src/main/java</lombok.sourceDirectory>
-    <lombok.testSourceDirectory>${project.basedir}/src/test/java</lombok.testSourceDirectory>
+    <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
     <!--endregion-->
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
-
       <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
@@ -63,11 +56,42 @@
         <optional>true</optional>
       </dependency>
 
+      <dependency>
+        <groupId>io.vavr</groupId>
+        <artifactId>vavr</artifactId>
+        <version>${vavr.version}</version>
+      </dependency>
+
+      <!--region Test dependency management (JUnit-Jupiter, AssertJ, Hamcrest, Mockito, JUnit-Vintage)-->
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-params</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!--endregion-->
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
@@ -78,11 +102,34 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.vavr</groupId>
+      <artifactId>vavr</artifactId>
+    </dependency>
 
+    <!--region Test dependencies - JUnit Jupiter, AssertJ, Hamcrest, Mockito -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+    </dependency>
+    <!--endregion-->
   </dependencies>
 
   <build>
-
     <defaultGoal>test</defaultGoal>
 
     <pluginManagement>
@@ -109,9 +156,9 @@
             </compilerArgs>
             <annotationProcessorPaths>
               <!--<processorPath>-->
-                <!--<groupId>systems.manifold</groupId>-->
-                <!--<artifactId>manifold-all</artifactId>-->
-                <!--<version>${manifold-version}</version>-->
+              <!--<groupId>systems.manifold</groupId>-->
+              <!--<artifactId>manifold-all</artifactId>-->
+              <!--<version>${manifold-version}</version>-->
               <!--</processorPath>-->
               <processorPath>
                 <groupId>org.projectlombok</groupId>
@@ -129,6 +176,13 @@
               <annotationProcessor>lombok.launch.AnnotationProcessorHider$ClaimingProcessor</annotationProcessor>
               <!--<annotationProcessor>org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor</annotationProcessor>-->
             </annotationProcessors>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven-surefire-plugin.version}</version>
+          <configuration>
+            <argLine>--enable-preview</argLine>
           </configuration>
         </plugin>
         <plugin>
@@ -162,6 +216,24 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>${properties-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <phase>initialize</phase>
+              <goals>
+                <goal>read-project-properties</goal>
+              </goals>
+              <configuration>
+                <files>
+                  <file>${basedir}/maven.properties</file>
+                </files>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -170,8 +242,11 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok-maven-plugin</artifactId>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+      </plugin>
     </plugins>
-
   </build>
 
 </project>

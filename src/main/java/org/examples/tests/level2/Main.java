@@ -8,6 +8,6 @@ public class Main {
 
   public static void main(String... __) {
     val s = "Hello, World!";
-    System.out.println("\"Hello, World!\" = " + s);
+    log.info("\"Hello, World!\" = {}", s);
   }
 }
